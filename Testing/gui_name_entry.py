@@ -3,6 +3,15 @@ from tkinter import ttk
 from tkinter import filedialog, messagebox as mb
 from PIL import Image, ImageTk
 
+
+# test the cordinates setting on left side scrollbar and on right side too, there
+# may be amistake of cordinates..if so, delete all scrolls and related things
+# set canvas size to normal certificate size
+
+
+headFont = 'Montserrat-semibold', 25
+normalFont = 'Montserrat', 12
+
 class App(tk.Tk):
 
     def __init__(self):
@@ -16,32 +25,40 @@ class App(tk.Tk):
         self.state('zoomed')
 
         # Setting title & tagline
-        self.title = tk.Label(self, text='CERTIFLY', font=('Montserrat-semibold', 25))
-        self.tagline = tk.Label(self, text='Certificates on the Go', font=('Montserrat', 15))
+        self.title = tk.Label(self, text='CERTIFLY', font=headFont)
+        self.tagline = tk.Label(self, text='Certificates on the Go', font=normalFont)
         self.title.pack()
         self.tagline.pack()
 
         # Create a canvas Frame to hold the name textbox and buttons
-        self.sideFrame = tk.Frame(self)
+        self.sideFrame = tk.Frame(self)#, width=20, height=100)
         self.sideFrame.pack(side='left')
+        # self.sideFrame.config(bg='#FEC868') # remove at last ................................................................................................
         
-        self.name_entry_title = tk.Label(self.sideFrame, text='Enter names to be printed', font=('Montserrat', 12))
-        self.name_entry_title.pack()
+        self.name_entry_title = tk.Label(self.sideFrame, text='Enter names to be printed', font=normalFont)
+        self.name_entry_title.pack(padx=30, pady=10, anchor='center')
 
-        self.name_entry = tk.Text(self.sideFrame, width=20, height=10,font=('Montserrat', 12), wrap='word') # for getting names from user
-        self.name_entry.pack(padx=40,pady=50, side="left",anchor="n")
+        self.name_entry = tk.Text(self.sideFrame, width=20, height=10, font=normalFont, wrap='word') # for getting names from user
+        self.name_entry.pack(padx=30, pady=10, anchor='center')
 
-        self.name_button = tk.Button(self.sideFrame, text="Enter names", command=self.enter_names) # button to enter the names
-        self.name_button.pack(padx=10,pady=200, side="left")
+        self.name_button = tk.Button(self.sideFrame, text="Enter names", font=normalFont, command=self.enter_names) # button to enter the names
+        self.name_button.pack(padx=30, pady=10, anchor='center')
 
-        self.open_button = tk.Button(self.sideFrame, text="Open Image", command=self.open_image) #  button to open an image file
-        self.open_button.pack()
+        self.open_button = tk.Button(self.sideFrame, text="Open Image", font=normalFont, command=self.open_image) #  button to open an image file
+        self.open_button.pack(padx=30, pady=10, anchor='center')
+
+        self.generate_sample = tk.Button(self.sideFrame, text="Generate Sample", font=normalFont, command=self.generate_sample) #  button to open an image file
+        self.generate_sample.pack(padx=30, pady=10, anchor='center')
+
+        self.generate_all = tk.Button(self.sideFrame, text="Generate All",font=normalFont, command=self.generate_all) #  button to open an image file
+        self.generate_all.pack(padx=30, pady=10, anchor='center')
 
         # Create a canvas Frame to hold the canvas and scrollbars for opened image
         self.canvasFrame = tk.Frame(self)
         self.canvasFrame.pack()
+        self.canvasFrame.config(bg='#FDA769') # remove at last ................................................................................................
 
-        self.canvas = tk.Canvas(self.canvasFrame, width=900, height=650, bd=0, highlightthickness=0) # canvas to display the image
+        self.canvas = tk.Canvas(self.canvasFrame, width=900, height=650, bd=0, highlightthickness=0) # canvas to display the image #1280, 904
         self.canvas.grid(row=0, column=0, sticky="nsew")
 
         self.v_scrollbar = tk.Scrollbar(self.canvasFrame, orient="vertical", command=self.canvas.yview) # vertical scrollbar for the canvas
@@ -75,8 +92,6 @@ class App(tk.Tk):
         except:
             mb.showerror('Error', 'Please select an image')
         
-        
-
         self.canvas.bind("<MouseWheel>", self.on_mousewheel)
         self.canvas.bind("<Shift-MouseWheel>", self.on_shift_mousewheel)
 
@@ -84,16 +99,22 @@ class App(tk.Tk):
         self.canvas.bind("<Enter>", self.change_cursor)
         self.canvas.bind("<Leave>", self.reset_cursor)
 
-        """# Separator object
+        # Separator object
         self.separator = ttk.Separator(self, orient='vertical')
         self.separator.config(width=2)
-        self.separator.place(relx=0.3, rely=0)#, relwidth=0.2, relheight=1)"""
+        self.separator.grid(column=1)#, relwidth=0.2, relheight=1)
 
     def show_coordinates(self, event):
         x = event.x
         y = event.y
         self.coord_label.config(text="X: {} Y: {}".format(x, y))
         print(x,y) # remove at last ................................................................................................
+
+    def generate_sample(self):
+        print('generate_sample')
+
+    def generate_all(self):
+        print('generate_all')
 
     def on_shift_mousewheel(self, event): # for scrolling left-right using shift + (mousewheel or trackpad)
         pixels_per_unit = 50
