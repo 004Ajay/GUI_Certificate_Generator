@@ -2,7 +2,6 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 
 # Global Variables
-spreadsheet_file = 'test_edited.xlsx'
 font = ImageFont.truetype('fonts/Poppins-Medium.ttf', 40) # Setting the font to Poppins Medium and font size to 40
 names = []
 
@@ -26,5 +25,5 @@ def generate(names, x, y):
         # w, h = draw.textsize(name, font=font)
 
         name_x, name_y = x, y # Setting the co-ordinates to where the names should be entered
-        draw.text((name_x, name_y), name, font=font, fill="black")#, fill="black") (0, 0, 0)          
+        draw.text((name_x, name_y), name, font=font, fill="black")      
         img.save(r'generated_certificates/' + name + ".png") # Saving the images to the generated_certificates directory
