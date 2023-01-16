@@ -2,7 +2,7 @@ import random, tkinter as tk
 from tkinter import PhotoImage, filedialog, messagebox as mb
 from PIL import Image, ImageTk
 from PIL.Image import Resampling
-from auto22 import generate
+from write_certificate import generate
 
 """
 to do:

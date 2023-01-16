@@ -1,1 +1,0 @@
-self.info_label
