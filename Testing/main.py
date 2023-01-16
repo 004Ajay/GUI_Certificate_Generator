@@ -1,15 +1,11 @@
 import random, tkinter as tk
-from tkinter import PhotoImage, filedialog, messagebox as mb
-from PIL import Image, ImageTk
+from tkinter import filedialog, messagebox as mb
+from PIL import Image, ImageTk, ImageFont
 from PIL.Image import Resampling
 from write_certificate import generate
 
-"""
-to do:
-finalize location of coordinates
-"""
-headFont = ('Montserrat-semibold', 25)
-normalFont = ('Montserrat', 12)
+headFont = ('fonts/Montserrat-SemiBold.ttf', 25)
+normalFont = ('fonts/Montserrat-Regular.ttf', 12)
 
 class App(tk.Tk):
 
@@ -95,6 +91,7 @@ class App(tk.Tk):
     global x, y # for checking in generate functions
     x = y = None
     def show_coordinates(self, event):
+        global x, y
         x = event.x/self.ratio 
         y = event.y/self.ratio
         self.coord_label.config(text=f"X: {round(x,2)}, Y: {round(y,2)}")
