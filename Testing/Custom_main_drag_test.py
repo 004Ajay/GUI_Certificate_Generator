@@ -4,12 +4,12 @@ from tkinter import filedialog, messagebox as mb
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 from PIL.Image import Resampling
 
-headFont = ('fonts/Montserrat-SemiBold.ttf', 35)
+headFont = ('fonts/Montserrat-Bold.ttf', 50)
 normalFont = ('fonts/Montserrat-Regular.ttf', 17)
 writerFont = ImageFont.truetype('fonts/Poppins-Medium.ttf', 40)
 
 ctk.set_appearance_mode("dark")  # Modes: system (default), light, dark. Window theme
-ctk.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green, used for default button colors & other 
+ctk.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green, used for default button colors & other
 
 def folder_check(): # Creates a new 'generated_certificates' folder if not already present
     if os.path.isdir("generated_certificates"): 
@@ -100,13 +100,45 @@ class App(ctk.CTk):
                 self.image = self.image.resize((int(self.image.width*self.ratio), int(self.image.height*self.ratio)), Resampling.BILINEAR)
                 self.photo = ImageTk.PhotoImage(self.image)
                 self.img_on_canvas = self.canvas.create_image(0, 0, image=self.photo, anchor="nw")
-                self.canvas.bind("<Button-1>", self.show_coordinates)
+                # self.canvas.bind("<Button-1>", self.show_coordinates)
+
+
+
+                # self.canvas = ctk.CTkCanvas(self.canvas, height=100, width=100, bg="black")
+                # self.canvas.pack(expand=True, fill="both")
+
+                #Resize image(originally 512 x 512)
+                self.img = Image.open("images/name.png")
+                # resized_image = img.resize((100,100))
+                self.image = ImageTk.PhotoImage(self.img)
+                # frame1.image = image
+                self.my_image = self.canvas.create_image(0, 0, image=self.image, anchor="nw")
+
+
+                
+
+
+                #Provides X-Y coordinates of mouse cursor when canvas object is selected
+                # self.my_label = ctk.CTkLabel(master=self.canvas, text="X: None Y: None")
+                # self.my_label.pack(padx="10px", pady="10px", anchor="se")
+                
+                self.canvas.configure(scrollregion=self.canvas.bbox(self.my_image))
+
             except:
                 mb.showerror('Error', 'Please select an image')
 
-            self.canvas.bind("<Button-1>", self.show_coordinates) # to get coordinates on mouse click 
-            self.canvas.bind("<Enter>", self.change_cursor) # to change cursor icon to crosshair (+)
-            self.canvas.bind("<Leave>", self.reset_cursor)
+            # self.canvas.bind("<Button-1>", self.show_coordinates) # to get coordinates on mouse click 
+            # self.canvas.bind("<Enter>", self.change_cursor) # to change cursor icon to crosshair (+)
+            # self.canvas.bind("<Leave>", self.reset_cursor)    
+
+
+            self.canvas.tag_bind(self.my_image,"<Button1-Motion>", self.move, add="+")
+            self.canvas.bind("<Button-3>", self.scan)
+            self.canvas.bind("<Button3-Motion>", self.drag)
+            self.canvas.tag_bind(self.my_image, "<Button1-Motion>", self.show_coordinates, add="+")
+
+    def display_coords(self, event):
+        self.coord_label.configure(text=f"X: {event.x} Y:{event.y}")        
 
     global x, y # for checking in generate functions
     x = y = None
@@ -152,10 +184,22 @@ class App(ctk.CTk):
             ctk.set_appearance_mode("dark")  # Modes: system, light, dark 
             self.mode_switch_button.configure(image=self.light_mode_img)
             
-    def change_cursor(self, event): self.canvas.configure(cursor="crosshair")  # to change normal cursor to crosshair(+)
-    def reset_cursor(self, event): self.canvas.configure(cursor="")            # when cursor is hovered over placed image
+    # def change_cursor(self, event): self.canvas.configure(cursor="crosshair")  # to change normal cursor to crosshair(+)
+    # def reset_cursor(self, event): self.canvas.configure(cursor="")            # when cursor is hovered over placed image
     def clear_label(self): self.info_label['text'] = "" # to remove text from info label
     def exit_window(self, event=None): self.destroy() # to exit the window
+
+
+    def move(self, event):
+        self.canvas.moveto(self.my_image,event.x-103,event.y)
+
+    def scan(self, event):
+        self.canvas.scan_mark(event.x, event.y)
+
+    def drag(self, event):
+        self.canvas.scan_dragto(event.x, event.y, gain=2)
+
+    
 
 app = App()
 app.mainloop()

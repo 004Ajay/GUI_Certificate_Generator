@@ -3,15 +3,16 @@ import customtkinter
 from tkinter import Canvas
 from PIL import Image, ImageTk
 
+def move(event):
+    my_canvas.moveto(my_image,event.x-50,event.y-50)
 
+def scan(event):
+    my_canvas.scan_mark(event.x, event.y)
 
-
-
-
-
+def drag(event):
+    my_canvas.scan_dragto(event.x, event.y, gain=2)
+    
 app = customtkinter.CTk()
-
-app.geometry('900x650')
 
 frame1 = customtkinter.CTkFrame(master=app)
 frame1.pack(padx=10,pady=10, expand=True, fill="both")
@@ -23,7 +24,7 @@ my_canvas.pack(expand=True, fill="both")
 img = Image.open("images/light_mode.png")
 resized_image = img.resize((100,100))
 image = ImageTk.PhotoImage(resized_image)
-# frame1.image = image
+frame1.image = image
 my_image = my_canvas.create_image(0, 0, image=image, anchor="nw")
 
 
@@ -35,7 +36,6 @@ my_canvas.bind("<Button3-Motion>", drag)
 #Provides X-Y coordinates of mouse cursor when canvas object is selected
 my_label = customtkinter.CTkLabel(master=my_canvas, text="X: None Y: None")
 my_label.pack(padx="10px", pady="10px", anchor="se")
-my_canvas.tag_bind(my_image, "<Button1-Motion>", display_coords, add="+")
 
 
 my_canvas.configure(scrollregion=my_canvas.bbox(my_image))
