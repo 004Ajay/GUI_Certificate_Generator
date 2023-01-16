@@ -13,7 +13,6 @@ class App(tk.Tk):
         super().__init__()
 
         self.bind("<Escape>", self.exit_window) # press 'escape' to exit the window
-
         self.dark_mode = Image.open('images/dark_mode.png')
         self.dark_mode_img = ImageTk.PhotoImage(self.dark_mode)    
 
@@ -32,7 +31,6 @@ class App(tk.Tk):
         # Create a canvas Frame to hold the name textbox and buttons
         self.sideFrame = tk.LabelFrame(self)#, width=20, height=100)
         self.sideFrame.pack(side='left', padx=20)
-        # self.sideFrame.config(bg='#FEC868') # remove at last ................................................................................................
         
         ########## making widgets ##########
         self.name_entry_title = tk.Label(self.sideFrame, text='Enter names to be printed', font=normalFont)
@@ -56,7 +54,6 @@ class App(tk.Tk):
         # Create a canvas Frame to hold the canvas and scrollbars for opened image
         self.canvasFrame = tk.LabelFrame(self)
         self.canvasFrame.pack(side="right", padx=50)
-        # self.canvasFrame.config(bg='#FDA769') # remove at last ................................................................................................
         self.canvas = tk.Canvas(self.canvasFrame, width=910, height=650, bd=0, highlightthickness=0) # canvas to display the image #1280, 904
         self.canvas.grid(row=0, column=0, sticky="nsew")
 
@@ -66,7 +63,6 @@ class App(tk.Tk):
         name_list = names.splitlines() # splitting texts by line
         self.info_label.config(text='Names Entered')
         self.after(5000, self.clear_label)
-        print(name_list) # remove at last ......................................................................................................................
 
     def open_image(self):
         if len(self.name_entry.get("1.0","end")) == 1: # chcecking if text box is empty
@@ -76,7 +72,7 @@ class App(tk.Tk):
                 filepath = filedialog.askopenfilename()
                 self.image = Image.open(filepath)
                 width, height = 1000, 650
-                self.ratio = min(width/self.image.width, height/self.image.height) # problem here===============================================
+                self.ratio = min(width/self.image.width, height/self.image.height) # problem here===============================================================
                 self.image = self.image.resize((int(self.image.width*self.ratio), int(self.image.height*self.ratio)), Resampling.BILINEAR)
                 self.photo = ImageTk.PhotoImage(self.image)
                 self.img_on_canvas = self.canvas.create_image(0, 0, image=self.photo, anchor="nw")
@@ -91,13 +87,12 @@ class App(tk.Tk):
     global x, y # for checking in generate functions
     x = y = None
     def show_coordinates(self, event):
-        global x, y
+        global x, y # for changing gobal values of x & y
         x = event.x/self.ratio 
         y = event.y/self.ratio
         self.coord_label.config(text=f"X: {round(x,2)}, Y: {round(y,2)}")
         self.info_label.config(text='Coordinates Set')
         self.after(5000, self.clear_label)
-        print(f"X: {x}, Y: {y}") # remove at last ................................................................................................................
 
     def generate_sample(self):
         sample_names = []
@@ -120,7 +115,6 @@ class App(tk.Tk):
 
     def change_cursor(self, event): self.canvas.config(cursor="crosshair")  # to change normal cursor to crosshair(+)
     def reset_cursor(self, event): self.canvas.config(cursor="")            # when cursor is hovered over placed image
-
     def clear_label(self): self.info_label['text'] = "" # to remove text from info label
     def exit_window(self, event=None): self.destroy() # to exit the window
 
