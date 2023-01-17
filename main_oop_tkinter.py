@@ -22,7 +22,7 @@ class App(tk.Tk):
         self.state('zoomed')
         self.title = tk.Label(self, text='CERTIFLY', font=headFont) # Setting title & tagline
         self.tagline = tk.Label(self, text='Certificates on the Go', font=normalFont)
-        self.dark_mode_button = tk.Button(self, image=self.dark_mode_img, height=30, width=30, bg='White') # command=dark_mode_switch) # dark_mode button
+        self.dark_mode_button = tk.Button(self, image=self.dark_mode_img, height=30, width=30, bg='White', command=self.dark_mode_switch) # dark_mode button
         
         self.title.pack()
         self.tagline.pack()
@@ -112,6 +112,9 @@ class App(tk.Tk):
         else:
             generate(name_list, x, y) # generating certificates with all given names
             mb.showinfo('Cerificates Generated', 'All cerificates has been generated')
+
+    def dark_mode_switch(self):
+        self.config(bg='black')     
 
     def change_cursor(self, event): self.canvas.config(cursor="crosshair")  # to change normal cursor to crosshair(+)
     def reset_cursor(self, event): self.canvas.config(cursor="")            # when cursor is hovered over placed image
