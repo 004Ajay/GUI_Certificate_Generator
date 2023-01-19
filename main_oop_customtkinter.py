@@ -16,14 +16,12 @@ def folder_check(): # Creates a new 'generated_certificates' folder if not alrea
         os.mkdir("generated_certificates")
 
 def generate(names, x, y):
-    names = []
     folder_check()
     for name in names:
-        img = Image.open(filepath) # Loading the certificate template
+        img = Image.open(filepath) # loading the selected certificate template
         draw = ImageDraw.Draw(img)
-        name_x, name_y = x, y # Setting the co-ordinates to where the names should be entered
-        draw.text((name_x, name_y), name, font=ImageFont.truetype('fonts/Poppins-Medium.ttf', 40), fill="black")      
-        img.save(r'generated_certificates/' + name + ".png") # Saving the images to the generated_certificates directory
+        draw.text((x, y), name, font=ImageFont.truetype('fonts/Poppins-Medium.ttf', 40), fill="black") # setting the co-ordinates to draw the names     
+        img.save(r'generated_certificates/' + name + ".png") # saving the images to the generated_certificates directory
             
 class App(ctk.CTk): ####### ↓↓↓ Main Window or Root ↓↓↓ #######
     def __init__(self):
@@ -62,7 +60,6 @@ class App(ctk.CTk): ####### ↓↓↓ Main Window or Root ↓↓↓ #######
         self.canvasFrame = ctk.CTkFrame(self) ####### ↓↓↓ Frame to hold canvas and dragging & opened image ↓↓↓ #######
         self.canvasFrame.pack(side="right", padx=50)
         self.canvas = ctk.CTkCanvas(self.canvasFrame, width=910, height=650) # canvas to display dragging & opened image
-        self.canvas.create_text(455, 325, text="Image Here", font=normalFont) # to info user about loc of image placing canvas
         self.canvas.grid(row=0, column=0, sticky="nsew")
 
     def non_empty_textbox(self):    
@@ -78,12 +75,12 @@ class App(ctk.CTk): ####### ↓↓↓ Main Window or Root ↓↓↓ #######
             names = self.name_entry.get("1.0","end").upper() # getting all texts from textbox & changing to uppercase
             name_list = names.splitlines() # splitting texts by line
             self.info_label.configure(text='Names Entered')
-            self.after(5000, self.clear_label)  
+            self.after(3000, self.clear_label)  
             
     def open_image(self):
         if self.non_empty_textbox():
             try:
-                global filepath
+                global filepath # for accessing the selected image on generate() function
                 filepath = filedialog.askopenfilename()
                 self.image = Image.open(filepath)
                 width, height = 1000, 650
@@ -119,9 +116,8 @@ class App(ctk.CTk): ####### ↓↓↓ Main Window or Root ↓↓↓ #######
     def generate_sample(self):
         sample_names = []
         if self.gen_err_check():
-            try:
-                for _ in range(2):
-                    sample_names.append(random.choice(name_list))
+            try:                
+                sample_names = [random.choice(name_list) for _ in range(2)] # list comprehension
                 generate(sample_names, x, y)
                 mb.showinfo('Cerificates Generated', 'Sample cerificates has been generated')
             except:
@@ -130,7 +126,7 @@ class App(ctk.CTk): ####### ↓↓↓ Main Window or Root ↓↓↓ #######
     def generate_all(self):
         if self.gen_err_check():
             try:
-                generate(name_list, x, y) # generating certificates with all given names
+                generate(name_list, x, y)
                 mb.showinfo('Cerificates Generated', 'All cerificates has been generated')
             except:
                 mb.showerror('Error', 'Unknown error occured')
@@ -152,7 +148,7 @@ class App(ctk.CTk): ####### ↓↓↓ Main Window or Root ↓↓↓ #######
     def scan(self, event): self.canvas.scan_mark(event.x, event.y)
     def drag(self, event): self.canvas.scan_dragto(event.x, event.y, gain=2)
     def display_coords(self, event): self.coord_label.configure(text=f"X: {event.x} Y:{event.y}") 
-    def clear_label(self): self.info_label['text'] = "" # to remove any text from info label
+    def clear_label(self): self.info_label.configure(text='') # to remove any text from info label
     def exit_window(self, event=None): self.destroy() # to exit the window
 
 app = App()
